@@ -73,7 +73,7 @@ class TgStreamer(AsyncStream):
         if content and (len(content) < 1000):
             text += mn + "\n\n" + "`{content}`"
         else:
-            text += mn + "\n\n" + "`{tweet['text']}`"
+            text += mn + "\n\n" + f"`{tweet['text']}`"
         url = f"https://twitter.com/{user['screen_name']}/status/{tweet['id']}"
         multichat = Var.TO_CHAT.split()
         for chat in multichat:
