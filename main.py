@@ -16,7 +16,7 @@ from Configs import Var
 logging.basicConfig(level=logging.INFO)
 
 
-Client = TelegramClient("TG-Twitter Streamer", Var.API_ID, Var.API_HASH).start(
+Client = TelegramClient("HausPROMO Streamer", Var.API_ID, Var.API_HASH).start(
     bot_token=Var.BOT_TOKEN
 )
 
@@ -24,20 +24,20 @@ auth = tweepy.OAuthHandler(Var.CONSUMER_KEY, Var.CONSUMER_SECRET)
 auth.set_access_token(Var.ACCESS_TOKEN, Var.ACCESS_TOKEN_SECRET)
 api = tweepy.API(auth)
 
-print("<<--- Setting Up Bot ! --->>")
+print("<<--- Montando o Robô! --->>")
 TRACK_IDS = []
 for userid in Var.TRACK_USERS.split(" "):
     try:
         user = api.get_user(screen_name=userid)._json
         TRACK_IDS.append(str(user["id"]))
-        print(f"<<--- Added {user['screen_name']} to TRACK - LIST ! --->>")
+        print(f"<<--- Adicionado {user['screen_name']} no monitoramento ! --->>")
     except Exception as e:
         print(e)
 
 
 class TgStreamer(AsyncStream):
     async def on_connect(self):
-        print("<<<---||| Stream Connected |||--->>>")
+        print("<<<---||| Stream Conectada |||--->>>")
 
     def get_urls(self, media):
         if not media:
@@ -67,12 +67,13 @@ class TgStreamer(AsyncStream):
             content = tweet.get("extended_tweet").get("full_text")
         except BaseException:
             pass
-        text = f"[{user['name']}](https://twitter.com/{user['screen_name']})"
-        mn = " Tweeted :"
+        #text = f"[{user['name']}](https://twitter.com/{user['screen_name']})"
+        text = f""
+        mn = " ✨ Nova Promoção ✨"
         if content and (len(content) < 1000):
-            text += mn + "\n\n" + f"`{content}`"
+            text += mn + "\n\n" + "`{content}`"
         else:
-            text += mn + "\n\n" + f"`{tweet['text']}`"
+            text += mn + "\n\n" + "`{tweet['text']}`"
         url = f"https://twitter.com/{user['screen_name']}/status/{tweet['id']}"
         multichat = Var.TO_CHAT.split()
         for chat in multichat:
@@ -89,7 +90,7 @@ class TgStreamer(AsyncStream):
                                 text,
                                 link_preview=False,
                                 file=pic,
-                                buttons=Button.url(text="View 🔗", url=url),
+                                buttons=Button.url(text="Ver 🔗", url=url),
                             )
                     else:
                         await Client.send_file(
@@ -100,14 +101,14 @@ class TgStreamer(AsyncStream):
                                 chat,
                                 text,
                                 link_preview=False,
-                                buttons=Button.url(text="View 🔗", url=url),
+                                buttons=Button.url(text="Ver 🔗", url=url),
                         )
                 else:
                     await Client.send_message(
                         chat,
                         text,
                         link_preview=False,
-                        buttons=Button.url(text="View 🔗", url=url),
+                        buttons=Button.url(text="Ver 🔗", url=url),
                     )
             except Exception as er:
                 print(er)
@@ -124,13 +125,13 @@ async def startmsg(event):
     await event.reply(
         file="ult.webp",
         buttons=[
-            [Button.inline("Hello Sir i'm Alive", data="ok")],
+            [Button.inline("Olá, estou online =)", data="ok")],
             [
                 Button.url(
-                    "Source",
-                    url="https://github.com/New-dev0/TgTwitterStreamer",
+                    "Criação",
+                    url="",
                 ),
-                Button.url("Support Group", url="t.me/FutureCodesChat"),
+                Button.url("Grupo", url=""),
             ],
         ],
     )
@@ -138,7 +139,7 @@ async def startmsg(event):
 
 @Client.on(events.callbackquery.CallbackQuery(data=re.compile("ok")))
 async def _(e):
-    return await e.answer("I'm Alive , No Need to click button 😂😂")
+    return await e.answer("Estou online!!!")
 
 
 if __name__ == "__main__":
