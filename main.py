@@ -72,8 +72,10 @@ class TgStreamer(AsyncStream):
         mn = " ✨ Nova Promoção ✨"
         if content and (len(content) < 1000):
             text += mn + "\n\n" + "`{content}`"
+            text = re.sub(r'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))', '', text)
         else:
             text += mn + "\n\n" + f"`{tweet['text']}`"
+            text = re.sub(r'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))', '', text)
         url = f"https://twitter.com/{user['screen_name']}/status/{tweet['id']}"
         multichat = Var.TO_CHAT.split()
         for chat in multichat:
